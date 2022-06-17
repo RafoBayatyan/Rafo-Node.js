@@ -1,9 +1,15 @@
-import { resolve } from 'path';
+/* eslint-disable no-underscore-dangle */
+import { resolve, dirname } from 'path';
 import express from 'express';
+import { fileURLToPath } from 'url';
 import { readFile, writeFile } from '../../utils/fs-promise.js';
+import { validateUserData } from './user-validator.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const router = express.Router();
-const filePath = resolve('user.json');
+const filePath = resolve(__dirname, 'user.json');
 
 const getUsers = async (path) => {
      const users = await readFile(path);
@@ -45,9 +51,8 @@ router.delete('/:index', async (req, res) => {
      }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateUserData, async (req, res) => {
      try {
-          console.log('rafo');
           const users = await getUsers(filePath);
           const user = req.body;
           const isUniqueUser = users.find((u) => u.username === user.username);
