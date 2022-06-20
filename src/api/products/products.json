@@ -1,0 +1,21 @@
+[
+    {
+        "name": "Iphone",
+        "color": "black"
+    },
+    {
+        "name": "Iphone",
+        "color": "black"
+    },
+    {
+        "name": "Iphone",
+        "color": "black",
+        "fCamera": 5
+    },
+    {
+        "name": "Iphone",
+        "color": "black",
+        "fCamera": 10,
+        "bCamera": 20
+    }
+]
