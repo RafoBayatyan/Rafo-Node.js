@@ -2,6 +2,8 @@
 
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { notExist } from '../../utils/Error/constants-error.js';
+import { ControllerError } from '../../utils/Error/custom-error.js';
 import { readFile, writeFile } from '../../utils/fs-promise.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,38 +16,44 @@ const getProducts = async (path) => {
      return JSON.parse(product);
 };
 
-export const getProductsC = async (req, res) => {
+export const getProductsC = async (req, res, next) => {
      try {
           const products = await getProducts(filePath);
+          if (products.length === 0) {
+               throw new ControllerError(406, notExist);
+          }
           res.status(200).send(JSON.stringify(products));
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          next(err);
      }
 };
 
-export const getProductC = async (req, res) => {
+export const getProductC = async (req, res, next) => {
      try {
           const i = req.params.index;
           const products = await getProducts(filePath);
+          if (i >= products.length) {
+               throw new ControllerError(406, notExist);
+          }
           res.status(200).send(JSON.stringify(products[i]));
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          next(err);
      }
 };
 
-export const deleteProductsC = async (req, res) => {
+export const deleteProductsC = async (req, res, next) => {
      try {
           const index = Number(req.params.index);
           const products = await getProducts(filePath);
           if (index >= products.length) {
-               throw new Error('User not exists');
+               throw new ControllerError(406, notExist);
           }
           const removedProduct = products[index];
           const newproducts = products.filter((_, i) => i !== index);
           writeFile(filePath, JSON.stringify(newproducts));
           res.status(200).send(JSON.stringify(removedProduct));
      } catch (err) {
-          res.status(500).send(JSON.stringify({ message: err.message }));
+          next(err);
      }
 };
 
@@ -62,5 +70,25 @@ export const createProductsC = async (req, res) => {
           return res.status(201).send(JSON.stringify(req.body));
      } catch (err) {
           return res.status(500).send(JSON.stringify({ message: err.message }));
+     }
+};
+export const updateProductC = async (req, res, next) => {
+     try {
+          const products = await getProducts(filePath);
+          const index = +req.params.index;
+          if (index >= products.length) throw new ControllerError(404, 'User not a found');
+          const updateProps = req.body;
+          Object.keys(updateProps).forEach((prop) => {
+               const product = products[index];
+               if (prop in product) {
+                    product[prop] = updateProps[prop];
+               } else {
+                    throw new ControllerError(406, 'This property not a found');
+               }
+          });
+          writeFile(filePath, JSON.stringify(products));
+          res.status(201).json(products[index]);
+     } catch (err) {
+          next(err);
      }
 };

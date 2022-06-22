@@ -11,9 +11,9 @@ app.use(morgan('dev'));
 app.use('/users', userRouter);
 app.use('/products', productRouter);
 
-app.use((err, req, res) => {
-     console.log(err);
-     res.status(409).send(JSON.stringify({ message: err.message }));
+app.use((err, req, res, next) => {
+     res.status(err.statusCode).json({ errors: [{ ...err }] });
+     next();
 });
 
 export default app;
