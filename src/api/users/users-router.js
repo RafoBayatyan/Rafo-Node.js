@@ -5,7 +5,7 @@ import {
 } from './users-controller.js';
 import {
      errorAlphanumeric, errorLength, errorNotEmpty,
-} from '../../utils/Error/constants-error.js';
+} from '../../constants.js/constants-error.js';
 import { expressValidation } from '../../utils/express-utils.js';
 
 const router = express.Router();

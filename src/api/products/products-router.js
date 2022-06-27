@@ -1,12 +1,12 @@
 import express from 'express';
 import { body, param } from 'express-validator';
 import {
-     createProductsC, deleteProductsC, getProductC, getProductsC, updateProductC,
+     createProductC, deleteProductC, getProductC, getProductsC, updateProductC,
 } from './products-controller.js';
 import { expressValidation } from '../../utils/express-utils.js';
 import {
      errorAlpha, errorAlphanumeric, errorLength, errorNotEmpty,
-} from '../../utils/Error/constants-error.js';
+} from '../../constants.js/constants-error.js';
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.get(
      getProductC,
 );
 
-router.delete('/:index', deleteProductsC);
+router.delete('/:index', deleteProductC);
 
 router.post(
      '/',
@@ -42,7 +42,7 @@ router.post(
           .withMessage('must contain only number not hight 25 and not min 3 '),
 
      expressValidation,
-     createProductsC,
+     createProductC,
 );
 router.patch(
      '/:index',
