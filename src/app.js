@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { validationResult } from 'express-validator';
 import express from 'express';
+import mongoose from 'mongoose';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
+
+mongoose.connect('mongodb+srv://root:root@marvel.ez6ozm5.mongodb.net/?retryWrites=true&w=majority');
 
 const app = express();
 

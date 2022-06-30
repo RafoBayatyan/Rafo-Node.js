@@ -1,51 +1,63 @@
 import express from 'express';
 import { body, param } from 'express-validator';
 import {
-     createUserC, deleteUserC, getUserC, getUsersC, updateUserC,
-} from './users-controller.js';
-import {
-     errorAlphanumeric, errorLength, errorNotEmpty,
-} from '../../constants.js/constants-error.js';
+     errorAlpha, errorLength, errorNotEmpty, errorUUID,
+} from '../../constants/constants-error.js';
 import { expressValidation } from '../../utils/express-utils.js';
+import {
+     getUserC, getUsersC, createUserC, deleteUserC, updateUserC,
+} from './users-controller.js';
 
 const router = express.Router();
 
 router.get('/', getUsersC);
 
-router.get(
-     '/:index',
-     param('index').toInt(),
-     expressValidation,
-     getUserC,
-);
+router.get('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, getUserC);
 
-router.delete('/:index', deleteUserC);
+router.delete('/:id', param('id').isMongoId().withMessage(errorUUID), expressValidation, deleteUserC);
 
 router.post(
      '/',
-     body('password').notEmpty().withMessage(errorNotEmpty('password'))
-          .isLength({ min: 8, max: 50 })
-          .withMessage(errorLength(8, 50)),
-     body('username').notEmpty().withMessage(errorNotEmpty('username'))
-          .isLength({ min: 3, max: 10 })
-          .withMessage(errorLength(8, 50))
-          .isAlphanumeric()
-          .withMessage(errorAlphanumeric),
+     body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
+          .withMessage(errorLength(2, 15))
+          .isAlpha('en-US')
+          .withMessage(errorAlpha),
+     body('lastName').notEmpty().withMessage(errorNotEmpty('lastName')).isLength({ min: 3, max: 15 })
+          .withMessage(errorLength(3, 15))
+          .isAlpha('en-US')
+          .withMessage(errorAlpha),
+     body('password').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlpha),
+     body('email').notEmpty().withMessage(errorNotEmpty('email')).isEmail()
+          .withMessage('Incorrect email address'),
      expressValidation,
      createUserC,
 );
 router.patch(
-     '/:index',
-     param('index').toInt(),
-     body('password').optional().notEmpty().withMessage(errorNotEmpty('password'))
-          .isLength({ min: 8, max: 50 })
-          .withMessage(errorLength(8, 50)),
-     body('username').optional().notEmpty().withMessage(errorNotEmpty('username'))
-          .isLength({ min: 3, max: 10 })
-          .withMessage(errorLength(8, 50))
-          .isAlphanumeric()
-          .withMessage(errorAlphanumeric),
+     '/:id',
+     param('id').isMongoId().withMessage(errorUUID),
+     body('firstName').notEmpty().withMessage('First name cannot be empty').isLength({ min: 2, max: 15 })
+          .withMessage(errorLength(2, 15))
+          .isAlpha('en-US')
+          .withMessage(errorAlpha)
+          .optional(),
+     body('lastName').notEmpty().withMessage(errorNotEmpty('lastName')).isLength({ min: 3, max: 15 })
+          .withMessage(errorLength(3, 15))
+          .isAlpha('en-US')
+          .withMessage(errorAlpha)
+          .optional(),
+     body('password').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlpha)
+          .optional(),
+     body('email').notEmpty().withMessage(errorNotEmpty('email')).isEmail()
+          .withMessage('Incorrect email address')
+          .optional(),
      expressValidation,
      updateUserC,
 );
+
 export default router;
