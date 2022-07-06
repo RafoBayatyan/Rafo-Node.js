@@ -13,6 +13,11 @@ export const getUserF = async (id) => {
      return user;
 };
 
+export const getUserByEmailF = async (email) => {
+     const got = (await getUserByEmailR(email))[0];
+     return got;
+};
+
 export const deleteUserF = async (id) => {
      const user = await getUserF(id);
 

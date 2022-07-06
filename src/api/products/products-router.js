@@ -6,7 +6,7 @@ import {
 import { expressValidation } from '../../utils/express-utils.js';
 import {
      errorAlpha, errorAlphanumeric, errorLength, errorNotEmpty,
-} from '../../constants.js/constants-error.js';
+} from '../../constants/constants-error.js';
 
 const router = express.Router();
 

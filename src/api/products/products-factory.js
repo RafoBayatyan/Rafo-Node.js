@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { notExist } from '../../constants.js/constants-error.js';
+
 import { FactoryError } from '../../utils/custom-errors.js';
 import { readFile, writeFile } from '../../utils/fs-promise.js';
 

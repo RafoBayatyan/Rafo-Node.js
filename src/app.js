@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
+import authRouter from './api/auth/auth-router.js';
 
 mongoose.connect('mongodb+srv://root:root@marvel.vmeummf.mongodb.net/?retryWrites=true&w=majority');
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 app.use('/products', productRouter);
+app.use('/auth', authRouter);
 
 app.use((err, req, res, next) => {
      console.log(err);
