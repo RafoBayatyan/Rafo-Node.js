@@ -23,14 +23,7 @@ export const deleteUserS = async (id) => {
      return user;
 };
 
-export const getUserByEmailS = async (email) => {
-     const got = (await getUserByEmailR(email))[0];
-
-     if (!got) {
-          throw new ServisError(400, `${email}\` user`, 'User not a found');
-     }
-     return got;
-};
+export const getUserByEmailS = async (email) => (await getUserByEmailR(email))[0];
 
 export const createUserS = async (user) => {
      const got = (await getUserByEmailR(user.email))[0];
@@ -40,6 +33,7 @@ export const createUserS = async (user) => {
      return createUserR({
           ...user,
           isVerifiedEmail: false,
+          isAdmine: false,
           password: await toHashPassword(user.password),
      });
 };

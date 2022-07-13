@@ -4,7 +4,7 @@ import {
      errorAlpha,
      errorAlphanumeric, errorEmail, errorLength, errorNotEmpty, errorJWT,
 } from '../../constants/constants-error.js';
-import expressValidation from '../../utils/express-utils.js';
+import { expressValidation } from '../../utils/express-utils.js';
 import { signInC, signUpC, verifyEmailC } from './auth-controller.js';
 
 const router = express.Router();

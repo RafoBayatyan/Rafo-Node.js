@@ -8,6 +8,7 @@ const UserSchema = new Schema({
      password: String,
      email: String,
      isVerifiedEmail: Boolean,
+     isAdmine: Boolean,
      age: Number,
      job: String,
 });

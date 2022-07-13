@@ -3,7 +3,7 @@ import { body, param } from 'express-validator';
 import {
      errorAlpha, errorLength, errorNotEmpty, errorUUID,
 } from '../../constants/constants-error.js';
-import expressValidation from '../../utils/express-utils.js';
+import { expressValidation } from '../../utils/express-utils.js';
 // import { isCorrectProperty } from './user-validator.js';
 import {
      getUserC, getUsersC, createUserC, deleteUserC, updateUserC,
