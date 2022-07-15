@@ -8,7 +8,7 @@ export class ControllerError extends Error {
           this.location = 'Controller';
      }
 }
-export class ServisError extends Error {
+export class ServerError extends Error {
      constructor(statusCode, param, customMessage) {
           super();
           this.statusCode = statusCode;

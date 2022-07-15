@@ -1,6 +1,6 @@
 import {
      createUserS, deleteUserS, getUserS, getUsersS, updateUserS,
-} from './users-servis.js';
+} from './users-server.js';
 
 export const getUsersC = async (req, res, next) => {
      try {

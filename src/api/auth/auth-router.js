@@ -5,7 +5,11 @@ import {
      errorAlphanumeric, errorEmail, errorLength, errorNotEmpty, errorJWT,
 } from '../../constants/constants-error.js';
 import { expressValidation } from '../../utils/express-utils.js';
-import { signInC, signUpC, verifyEmailC } from './auth-controller.js';
+
+import {
+     changForgotC,
+     forgotPasswordC, signInC, signUpC, verifyEmailC,
+} from './auth-controller.js';
 
 const router = express.Router();
 
@@ -46,10 +50,28 @@ router.post(
 
 router.post(
      '/verify',
-     body('token').notEmpty().withMessage(errorNotEmpty('Email')).isJWT()
+     body('token').notEmpty().isJWT()
           .withMessage(errorJWT),
      expressValidation,
      verifyEmailC,
+);
+router.post(
+     '/forgot',
+     body('email').notEmpty().withMessage(errorNotEmpty('email')).isEmail()
+          .withMessage(errorEmail),
+     expressValidation,
+     forgotPasswordC,
+);
+router.post(
+     '/changforgot',
+     body('token').notEmpty().isJWT()
+          .withMessage(errorJWT),
+     body('newPassword').notEmpty().withMessage(errorNotEmpty('password')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlpha),
+     expressValidation,
+     changForgotC,
 );
 
 export default router;

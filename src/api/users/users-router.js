@@ -4,6 +4,7 @@ import {
      errorAlpha, errorLength, errorNotEmpty, errorUUID,
 } from '../../constants/constants-error.js';
 import { expressValidation } from '../../utils/express-utils.js';
+import { changePasswordC } from './changePassword-Controller.js';
 // import { isCorrectProperty } from './user-validator.js';
 import {
      getUserC, getUsersC, createUserC, deleteUserC, updateUserC,
@@ -60,6 +61,21 @@ router.patch(
      expressValidation,
      // isCorrectProperty,
      updateUserC,
+);
+router.post(
+     '/changpassword',
+     body('oldPassword').notEmpty().withMessage(errorNotEmpty('oldPassword')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlpha),
+
+     body('newPassword').notEmpty().withMessage(errorNotEmpty('newPassword')).isLength({ min: 8, max: 20 })
+          .withMessage(errorLength(8, 20))
+          .isAlphanumeric('en-US')
+          .withMessage(errorAlpha),
+
+     expressValidation,
+     changePasswordC,
 );
 
 export default router;
