@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import {
      createProductS, deleteProductS, getProductS, getProductsS, updateProductS,
-} from './products-server.js';
+} from './products-service.js';
 
-export const getProductC = async (req, res, next) => {
+export const getProductsC = async (req, res, next) => {
      try {
           const got = await getProductsS();
           res.status(200).json(got);
@@ -11,7 +11,7 @@ export const getProductC = async (req, res, next) => {
           next(err);
      }
 };
-export const getProductsC = async (req, res, next) => {
+export const getProductC = async (req, res, next) => {
      try {
           const got = await getProductS(req.params.id);
           res.status(200).json(got);
@@ -38,6 +38,7 @@ export const createProductC = async (req, res, next) => {
 export const updateProductC = async (req, res, next) => {
      try {
           const { body, params } = req;
+          console.log(params);
           await updateProductS(params.id, body);
           res.status(201).json({ message: 'Product updated' });
      } catch (err) {

@@ -36,13 +36,12 @@ export const getUserByEmailS = async (email) => {
 
 export const createUserS = async (user) => {
      const got = await getUserByEmailUnCheckS(user.email);
-
+     console.log(got);
      if (got) throw new ServerError(400, user.email, 'Email is already exits');
 
      return createUserR({
           ...user,
           isVerifiedEmail: false,
-          isAdmin: false,
           password: await toHashPassword(user.password),
      });
 };
@@ -50,12 +49,11 @@ export const createUserS = async (user) => {
 export const updateUserS = async (id, userUpd) => {
      await updateUserR(id, userUpd);
 };
-export const changePasswordS = async (user, id) => {
-     const got = await getUserS(id);
-     const result = await comparePassword(user.oldPassword, got.password);
-     if (!result) {
-          throw new ServerError(400, '', 'password is not correct ');
-     }
-     const hashPassword = await toHashPassword(user.newPassword);
+export const changePasswordS = async (body, id) => {
+     const user = await getUserS(id);
+     const { clientOldPassword, clientNewPassword } = body;
+     const result = await comparePassword(clientOldPassword, user.password);
+     if (!result) throw new ServerError(400, clientOldPassword, 'Password is not correct');
+     const hashPassword = await toHashPassword(clientNewPassword);
      await updateUserS(id, { password: hashPassword });
 };

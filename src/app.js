@@ -3,12 +3,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import 'dotenv/config';
+import clientProductRouter from './api/products/product-client-router.js';
+import clientUserRouter from './api/users/user-client-router.js';
+import bagRouter from './api/bag/bag-router.js';
 import userRouter from './api/users/users-router.js';
 import productRouter from './api/products/products-router.js';
 import authRouter from './api/auth/auth-router.js';
-import { authorization, authorizationAdmin } from './utils/auth-middleware.js';
-import { User } from './models/user-model.js';
-import { getUserByEmailUnCheckS } from './api/users/users-server.js';
+import { authorizationAdmin, authorizationClient } from './utils/auth-middleware.js';
+import User from './models/user-model.js';
+import { getUserByEmailUnCheckS } from './api/users/users-service.js';
 import { toHashPassword } from './utils/bcrypt.js';
 
 const app = express();
@@ -30,10 +33,16 @@ const mongoConnection = async () => {
 };
 
 const routing = () => {
-     app.use('/client', authorization, userRouter);
      app.use('/auth', authRouter);
+     // Admin routs
      app.use('/users', authorizationAdmin, userRouter);
      app.use('/products', authorizationAdmin, productRouter);
+     app.use('/client', authorizationClient, userRouter);
+
+     // Client routs
+     app.use('/client-product', authorizationClient, clientProductRouter);
+     app.use('/client', authorizationClient, clientUserRouter);
+     app.use('/bag', authorizationClient, bagRouter);
 };
 
 const errorHandling = () => {
@@ -47,6 +56,7 @@ const createDefaultAdmin = async () => {
      const { ADMIN_EMAIL, ADMIN_PASS } = process.env;
      const existUser = await getUserByEmailUnCheckS(ADMIN_EMAIL);
      if (existUser) {
+          console.log('Admin is here');
           return false;
      }
 
@@ -63,7 +73,7 @@ const createDefaultAdmin = async () => {
 
      const user = new User(admin);
      await user.save();
-
+     console.log('Admin is coming');
      return true;
 };
 const init = async () => {

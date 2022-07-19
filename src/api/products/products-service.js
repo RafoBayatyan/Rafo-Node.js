@@ -1,6 +1,5 @@
 /* eslint-disable no-prototype-builtins */
 import { ServerError } from '../../utils/custom-errors.js';
-import { isCorrectPropertyPV } from './products-validator.js';
 import {
      createProductR, getProductsR, getProductR, deleteProductR, updateProductR,
 } from './products-repository.js';
@@ -28,6 +27,6 @@ export const createProductS = async (product) => {
 };
 
 export const updateProductS = async (id, productUpd) => {
-     isCorrectPropertyPV(productUpd);
+     console.log(productUpd, id);
      await updateProductR(id, productUpd);
 };

@@ -15,7 +15,7 @@ export const authorizationAdmin = (req, res, next) => {
           next(new ServerError(401, 'Token', errorAuth));
      }
 };
-export const authorization = (req, res, next) => {
+export const authorizationClient = (req, res, next) => {
      try {
           const token = (req.headers.authorization).split(' ')[1];
           const verified = verify(token);

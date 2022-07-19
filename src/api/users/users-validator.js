@@ -7,23 +7,9 @@ export const isUniqueV = (prop, propList) => {
 
      if (isUniqueUser) throw new ValidatorError(400, prop.email, 'User exists');
 };
-export const isCorrectPropertyUV = (prop) => {
-     const typeSchema = {
-          firstName: null,
-          lastName: null,
-          password: null,
-          email: null,
-          age: null,
-          job: null,
-
-     };
-     Object.keys(prop).forEach((key) => {
-          if (!typeSchema.hasOwnProperty(key)) throw new ValidatorError(404, key, 'Property not a found');
-     });
-};
-
-export const isCorrectProperty = (req, res, next) => {
+export const isCorrectPropertyUV = (req, res, next) => {
      const { body } = req;
+
      const typeSchema = {
           firstName: null,
           lastName: null,
@@ -31,6 +17,8 @@ export const isCorrectProperty = (req, res, next) => {
           email: null,
           age: null,
           job: null,
+          gender: null,
+          blood: null,
 
      };
      Object.keys(body).forEach((key) => {

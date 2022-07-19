@@ -1,40 +1,19 @@
 import express from 'express';
 import { body, param } from 'express-validator';
 import {
-     createProductC, getProductC, getProductsC, deleteProductC, updateProductC,
+     createProductC, deleteProductC, updateProductC,
 } from './products-controller.js';
-import { expressValidation } from '../../utils/express-utils.js';
-import isLicenseKeyV, { isCorrectCategoryV } from './products-validator.js';
-import { errorAlphanumeric, errorLength, errorNotEmpty } from '../../constants/constants-error.js';
+import expressValidation from '../../utils/express-utils.js';
+import {
+     errorAlphanumeric, errorLength, errorNotEmpty, errorUUID,
+} from '../../constants/constants-error.js';
+import { isCorrectCategoryV } from './products-validator.js';
 
 const productRouter = express.Router();
 
-productRouter.get(
-     '/',
-     getProductsC,
-);
-
-productRouter.get(
-     './:category',
-     isCorrectCategoryV,
-);
-
-productRouter.get(
-     '/:index',
-     param('index').toInt(),
-     expressValidation,
-     getProductC,
-);
-
-productRouter.delete(
-     '/:index',
-     param('index').toInt(),
-     expressValidation,
-     deleteProductC,
-);
-
 productRouter.post(
      '/',
+     isCorrectCategoryV,
      body('videoGameName').notEmpty().withMessage(errorNotEmpty('videoGameName')).isLength({ min: 2, max: 30 })
           .withMessage(errorLength(2, 3))
           .isAlphanumeric('en-US', { ignore: ' _-' })
@@ -47,13 +26,12 @@ productRouter.post(
           .withMessage('Wrong release year'),
      body('productPriceInUSD').notEmpty().withMessage(errorNotEmpty('productPriceInUSD')).isInt({ min: 10 })
           .withMessage('Enter the correct amount ( "The amount must be at least $10" )'),
-     isLicenseKeyV,
      expressValidation,
      createProductC,
 );
 productRouter.patch(
-     '/:index',
-     param('index').toInt(),
+     '/:id',
+     param('id').isMongoId().withMessage(errorUUID),
      body('videoGameName').notEmpty().withMessage(errorNotEmpty('videoGameName')).isLength({ min: 2, max: 30 })
           .withMessage(errorLength(2, 30))
           .isAlphanumeric('en-US', { ignore: ' _-' })
@@ -71,9 +49,14 @@ productRouter.patch(
      body('productPriceInUSD').notEmpty().withMessage(errorNotEmpty('productPriceInUSD')).isInt({ min: 10 })
           .withMessage('Enter the correct amount ( "The amount must be at least $10" )')
           .optional(),
-     isLicenseKeyV,
      expressValidation,
      updateProductC,
 );
 
+productRouter.delete(
+     '/:id',
+     param('id').isMongoId().withMessage(errorUUID),
+     expressValidation,
+     deleteProductC,
+);
 export default productRouter;

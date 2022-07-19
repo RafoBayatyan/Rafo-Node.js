@@ -1,7 +1,7 @@
 import { verify, sign } from '../../utils/JWT.js';
 import { ServerError } from '../../utils/custom-errors.js';
 import { errorEmailVerification, errorSignIn } from '../../constants/constants-error.js';
-import { createUserS, getUserByEmailS, updateUserS } from '../users/users-server.js';
+import { createUserS, getUserByEmailS, updateUserS } from '../users/users-service.js';
 import mailer, { messageMail } from '../../utils/nodemailer.js';
 import { comparePassword, toHashPassword } from '../../utils/bcrypt.js';
 

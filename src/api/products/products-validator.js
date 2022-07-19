@@ -3,7 +3,7 @@
 import { errorAlphanumeric } from '../../constants/constants-error.js';
 import { ValidatorError } from '../../utils/custom-errors.js';
 
-const checkLicenseKeyV = (req, res, next) => {
+export const checkLicenseKeyV = (req, res, next) => {
      if (!req.body.licenseKey) return next();
 
      const key = req.body.licenseKey;
@@ -22,7 +22,6 @@ const checkLicenseKeyV = (req, res, next) => {
      req.body.licenseKey = checkKey;
      return next();
 };
-export default checkLicenseKeyV;
 export const isCorrectPropertyPV = (prop) => {
      const typeSchema = {
           videoGameName: null,
@@ -37,7 +36,7 @@ export const isCorrectPropertyPV = (prop) => {
      });
 };
 export const isCorrectCategoryV = (req, res, next) => {
-     const prop = req.body;
+     const { body } = req;
      const typeSchema = {
           videoGameName: null,
           developers: null,
@@ -46,8 +45,8 @@ export const isCorrectCategoryV = (req, res, next) => {
           productPriceInUSD: null,
 
      };
-     Object.keys(prop).forEach((key) => {
-          if (!typeSchema.hasOwnProperty(key)) throw new ValidatorError(404, key, 'Property not a found');
+     Object.keys(body).forEach((key) => {
+          if (!typeSchema.hasOwnProperty(key)) next(new ValidatorError(404, key, 'Property not a found'));
      });
      next();
 };
